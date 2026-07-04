@@ -1,0 +1,686 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Diagnóstico ECP</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0A0A0A;
+    --bg-soft: #121212;
+    --paper: #F5F5F3;
+    --ink: #2B2B2B;
+    --ink-soft: #8A8A85;
+    --signature: #1F3D2E;
+    --signature-light: #2E5942;
+    --accent: #2E7D52;
+    --accent-light: #3F9868;
+    --line: rgba(245, 245, 243, 0.12);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--paper);
+    font-family: 'Inter', -apple-system, sans-serif;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    * { animation: none !important; transition: none !important; }
+  }
+
+  .display {
+    font-family: 'Fraunces', Georgia, serif;
+    font-weight: 500;
+    letter-spacing: -0.01em;
+  }
+
+  .wrap {
+    max-width: 720px;
+    margin: 0 auto;
+    padding: 0 24px;
+  }
+
+  .eyebrow {
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.16em;
+    color: var(--accent-light);
+    font-weight: 600;
+    margin-bottom: 18px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .eyebrow::before {
+    content: '';
+    width: 22px;
+    height: 1px;
+    background: var(--accent-light);
+    display: inline-block;
+  }
+
+  /* HERO */
+  .hero {
+    padding: 96px 0 72px;
+    position: relative;
+    overflow: hidden;
+    border-bottom: 1px solid var(--line);
+  }
+
+  .scan {
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    pointer-events: none;
+    opacity: 0.5;
+  }
+
+  .scan svg { width: 100%; height: 100%; }
+
+  .hero-content { position: relative; z-index: 1; }
+
+  h1.hero-title {
+    font-size: clamp(32px, 6.5vw, 52px);
+    line-height: 1.12;
+    color: var(--paper);
+    margin-bottom: 28px;
+  }
+
+  h1.hero-title em {
+    font-style: normal;
+    color: var(--accent-light);
+    position: relative;
+  }
+
+  .subhead {
+    font-size: 18px;
+    color: var(--ink-soft);
+    max-width: 540px;
+    margin-bottom: 40px;
+  }
+
+  /* SECTIONS */
+  section {
+    padding: 72px 0;
+    border-bottom: 1px solid var(--line);
+  }
+
+  h2.section-title {
+    font-size: clamp(26px, 4vw, 34px);
+    line-height: 1.2;
+    margin-bottom: 24px;
+    color: var(--paper);
+  }
+
+  p.body-text {
+    font-size: 17px;
+    color: #C9C9C6;
+    margin-bottom: 18px;
+    max-width: 620px;
+  }
+
+  p.body-text:last-child { margin-bottom: 0; }
+
+  strong.hl { color: var(--paper); font-weight: 600; }
+
+  /* CTA BUTTON */
+  .cta-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    background: var(--accent);
+    color: var(--paper);
+    font-family: 'Inter', sans-serif;
+    font-weight: 600;
+    font-size: 16px;
+    padding: 18px 32px;
+    border-radius: 4px;
+    text-decoration: none;
+    border: none;
+    cursor: pointer;
+    box-shadow: 0 8px 24px rgba(46, 125, 82, 0.35);
+    transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
+  }
+
+  .cta-btn:hover {
+    background: var(--accent-light);
+    transform: translateY(-1px);
+    box-shadow: 0 10px 28px rgba(46, 125, 82, 0.45);
+  }
+
+  .cta-btn:active { transform: translateY(0); }
+
+  .cta-btn svg { width: 16px; height: 16px; flex-shrink: 0; }
+
+  .cta-center { text-align: center; padding: 48px 0; }
+
+  .cta-note {
+    display: block;
+    margin-top: 14px;
+    font-size: 13px;
+    color: var(--ink-soft);
+  }
+
+  /* PROOF */
+  .proof-block {
+    background: var(--bg-soft);
+    border-left: 3px solid var(--signature-light);
+    padding: 24px 28px;
+    border-radius: 2px;
+    margin-top: 8px;
+  }
+
+  .proof-block p {
+    font-family: 'Fraunces', serif;
+    font-style: italic;
+    font-size: 18px;
+    color: var(--paper);
+    margin-bottom: 10px;
+  }
+
+  .proof-tag {
+    font-size: 12px;
+    color: var(--accent-light);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    font-weight: 600;
+  }
+
+  /* METHOD DIAGRAM */
+  .method-diagram {
+    max-width: 400px;
+    margin: 8px auto 32px;
+  }
+
+  .method-diagram svg { width: 100%; height: auto; }
+
+  /* METHOD - three steps */
+  .steps { display: flex; flex-direction: column; gap: 0; margin-top: 8px; }
+
+  .step {
+    display: grid;
+    grid-template-columns: 44px 1fr;
+    gap: 20px;
+    padding: 28px 0;
+    border-top: 1px solid var(--line);
+  }
+
+  .step:first-child { border-top: none; }
+
+  .step-num {
+    font-family: 'Fraunces', serif;
+    font-size: 22px;
+    color: var(--signature-light);
+    font-weight: 500;
+  }
+
+  .step-title {
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--paper);
+    margin-bottom: 8px;
+  }
+
+  .step-text { color: #C9C9C6; font-size: 15px; max-width: 480px; }
+
+  /* PARA QUEM É */
+  .who-grid { display: flex; flex-direction: column; gap: 14px; margin-top: 8px; }
+
+  .who-item {
+    display: flex;
+    gap: 14px;
+    align-items: flex-start;
+    padding: 16px 18px;
+    background: var(--bg-soft);
+    border-radius: 4px;
+  }
+
+  .who-item.no { opacity: 0.7; }
+
+  .who-mark {
+    font-family: 'Fraunces', serif;
+    font-size: 18px;
+    color: var(--signature-light);
+    flex-shrink: 0;
+    margin-top: -1px;
+  }
+
+  .who-item.no .who-mark { color: var(--ink-soft); }
+
+  /* ENTREGAVEIS */
+  .deliv-list { display: flex; flex-direction: column; gap: 0; margin-top: 8px; }
+
+  .deliv-item {
+    display: flex;
+    gap: 16px;
+    padding: 20px 0;
+    border-top: 1px solid var(--line);
+  }
+
+  .deliv-item:first-child { border-top: none; }
+
+  .deliv-icon {
+    width: 20px; height: 20px; flex-shrink: 0; margin-top: 2px;
+    color: var(--accent-light);
+  }
+
+  .deliv-icon svg { width: 100%; height: 100%; }
+
+  .deliv-text { font-size: 16px; color: #C9C9C6; }
+
+  .bonus-tag {
+    display: inline-block;
+    margin-top: 20px;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--accent-light);
+    font-weight: 600;
+    border: 1px solid var(--accent);
+    padding: 6px 12px;
+    border-radius: 3px;
+  }
+
+  /* STACK DE VALOR */
+  .value-card {
+    background: var(--signature);
+    border-radius: 6px;
+    padding: 32px;
+    margin-top: 16px;
+  }
+
+  .value-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    padding: 12px 0;
+    border-bottom: 1px solid rgba(245,245,243,0.14);
+    font-size: 15px;
+  }
+
+  .value-row:last-of-type { border-bottom: none; }
+
+  .value-row .strike { text-decoration: line-through; color: rgba(245,245,243,0.5); }
+
+  .value-final {
+    margin-top: 20px;
+    padding-top: 20px;
+    border-top: 1px solid rgba(245,245,243,0.25);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .value-final .price {
+    font-family: 'Fraunces', serif;
+    font-size: 36px;
+    color: var(--paper);
+  }
+
+  .value-final .price span { font-size: 16px; color: rgba(245,245,243,0.6); }
+
+  /* GARANTIA */
+  .guarantee-box {
+    display: flex;
+    gap: 20px;
+    align-items: flex-start;
+    background: var(--bg-soft);
+    border: 1px solid var(--line);
+    border-radius: 6px;
+    padding: 28px;
+    margin-top: 8px;
+  }
+
+  .guarantee-icon {
+    width: 40px; height: 40px; flex-shrink: 0; color: var(--accent-light);
+  }
+
+  /* FAQ */
+  details.faq-item {
+    border-top: 1px solid var(--line);
+    padding: 20px 0;
+  }
+
+  details.faq-item:first-child { border-top: none; }
+
+  details.faq-item summary {
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 16px;
+    color: var(--paper);
+    list-style: none;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 16px;
+  }
+
+  details.faq-item summary::-webkit-details-marker { display: none; }
+
+  .faq-plus {
+    flex-shrink: 0;
+    width: 20px; height: 20px;
+    position: relative;
+  }
+
+  .faq-plus::before, .faq-plus::after {
+    content: '';
+    position: absolute;
+    background: var(--accent-light);
+    transition: transform 0.2s ease;
+  }
+
+  .faq-plus::before { top: 9px; left: 2px; width: 16px; height: 2px; }
+  .faq-plus::after { top: 2px; left: 9px; width: 2px; height: 16px; }
+
+  details[open] .faq-plus::after { transform: rotate(90deg); opacity: 0; }
+
+  .faq-answer {
+    margin-top: 14px;
+    color: #C9C9C6;
+    font-size: 15px;
+    max-width: 600px;
+  }
+
+  /* FOOTER OFFER */
+  .final-offer {
+    text-align: center;
+    padding: 88px 0 100px;
+  }
+
+  .final-offer h2 { max-width: 560px; margin: 0 auto 20px; }
+  .final-offer p.body-text { margin: 0 auto 36px; }
+
+  footer {
+    padding: 32px 0 40px;
+    text-align: center;
+  }
+
+  .brandname {
+    font-family: 'Fraunces', serif;
+    font-size: 15px;
+    color: var(--ink-soft);
+    letter-spacing: 0.02em;
+  }
+
+  /* WHATSAPP FLOAT */
+  .wa-float {
+    position: fixed;
+    bottom: 22px;
+    right: 22px;
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    background: #1F3D2E;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.4);
+    z-index: 50;
+    text-decoration: none;
+    transition: transform 0.15s ease;
+  }
+
+  .wa-float:hover { transform: scale(1.06); }
+
+  .wa-float svg { width: 26px; height: 26px; color: #F5F5F3; }
+
+  @media (max-width: 600px) {
+    .hero { padding: 64px 0 48px; }
+    section { padding: 56px 0; }
+    .value-card { padding: 24px; }
+    .value-final { flex-direction: column; align-items: flex-start; gap: 12px; }
+  }
+</style>
+</head>
+<body>
+
+<a href="https://wa.me/5500000000000" class="wa-float" target="_blank" rel="noopener" aria-label="Falar no WhatsApp">
+  <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.45 1.32 4.95L2.05 22l5.25-1.38c1.45.79 3.08 1.21 4.74 1.21h.01c5.46 0 9.91-4.45 9.91-9.91 0-2.65-1.03-5.14-2.9-7.01A9.87 9.87 0 0012.04 2m0 1.8c2.15 0 4.17.84 5.69 2.36a8.03 8.03 0 012.36 5.7c0 4.45-3.62 8.07-8.07 8.07a8.1 8.1 0 01-4.11-1.12l-.29-.17-3.11.82.83-3.04-.19-.31a8.02 8.02 0 01-1.24-4.3c0-4.45 3.63-8.01 8.13-8.01M8.53 6.85c-.17 0-.44.06-.67.31s-.88.86-.88 2.1.9 2.44 1.03 2.6c.13.17 1.76 2.83 4.38 3.85 2.17.86 2.61.69 3.08.65.47-.04 1.53-.62 1.74-1.23.22-.6.22-1.11.15-1.22-.07-.11-.24-.17-.5-.3s-1.53-.75-1.77-.84c-.24-.09-.41-.13-.59.13-.17.26-.67.84-.82 1.01-.15.17-.3.2-.56.07-.26-.13-1.09-.4-2.08-1.28-.77-.68-1.29-1.53-1.44-1.79-.15-.26-.02-.4.11-.53.12-.12.26-.3.39-.45.13-.15.17-.26.26-.43.09-.17.04-.32-.02-.45-.07-.13-.59-1.5-.83-2.05-.21-.51-.43-.47-.6-.48h-.5z"/></svg>
+</a>
+
+<div class="scan-decor" aria-hidden="true"></div>
+
+<header class="hero">
+  <div class="scan" aria-hidden="true">
+    <svg preserveAspectRatio="none" viewBox="0 0 720 400">
+      <circle cx="600" cy="60" r="220" fill="none" stroke="#16303A" stroke-width="1" opacity="0.5"/>
+      <circle cx="600" cy="60" r="160" fill="none" stroke="#16303A" stroke-width="1" opacity="0.35"/>
+    </svg>
+  </div>
+  <div class="wrap hero-content">
+    <div class="eyebrow">Diagnóstico ECP</div>
+    <h1 class="hero-title display">Você não tem um produto fraco.<br>Tem uma <em>narrativa ruim</em>.</h1>
+    <p class="subhead">Você sabe fazer o que faz. Já ajudou gente de verdade, tem resultado pra mostrar. Mas quando escreve sobre isso, a pessoa lê e passa direto. O problema não é o que você entrega. É o que você não consegue ver no próprio texto, porque está perto demais dele.</p>
+    <a href="#oferta" class="cta-btn">
+      Sim, quero descobrir o meu ponto cego
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+    </a>
+  </div>
+</header>
+
+<section>
+  <div class="wrap">
+    <div class="eyebrow">A dor</div>
+    <h2 class="section-title display">O sintoma que você já conhece</h2>
+    <p class="body-text">Você abre o anúncio e vê o número de cliques, mas quase ninguém compra. Reescreve a bio pela quinta vez esse mês. Manda a mesma proposta pro décimo cliente e recebe o mesmo silêncio.</p>
+    <p class="body-text">Aí você pensa: talvez seja o preço. Baixa. Não muda nada. Pensa que é o público errado. Troca o anúncio. Continua igual. No fim, sobra a sensação mais frustrante de todas: <strong class="hl">eu sei fazer, só não sei dizer que sei fazer.</strong></p>
+    <p class="body-text">Isso não é falta de talento. É um ponto cego. Todo mundo que escreve sobre o próprio trabalho tem um, porque ninguém lê a própria comunicação com os olhos de quem nunca ouviu falar dela antes.</p>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="eyebrow">Quem já passou por isso</div>
+    <div class="proof-block">
+      <p>"Eu achava que o problema era o preço. Era a segunda frase da minha bio."</p>
+      <span class="proof-tag">Substituir por depoimento real</span>
+    </div>
+  </div>
+</section>
+
+<div class="cta-center">
+  <a href="#oferta" class="cta-btn">Sim, quero descobrir o meu ponto cego</a>
+</div>
+
+<section>
+  <div class="wrap">
+    <div class="eyebrow">Como funciona</div>
+    <h2 class="section-title display">Três passos até a clareza</h2>
+    <div class="method-diagram">
+      <svg viewBox="0 0 400 320" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Diagrama triangular dos três passos do diagnóstico">
+        <defs>
+          <marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+            <path d="M0 0L10 5L0 10z" fill="#2E5942"/>
+          </marker>
+        </defs>
+        <line x1="90" y1="70" x2="310" y2="70" stroke="#2E5942" stroke-width="1.5" marker-end="url(#arrow)"/>
+        <line x1="300" y1="90" x2="220" y2="250" stroke="#2E5942" stroke-width="1.5" marker-end="url(#arrow)"/>
+        <line x1="180" y1="250" x2="100" y2="90" stroke="#2E5942" stroke-width="1.5" stroke-dasharray="3 5" opacity="0.5"/>
+
+        <g>
+          <circle cx="70" cy="70" r="42" fill="#121212" stroke="#2E5942" stroke-width="1.5"/>
+          <text x="70" y="63" text-anchor="middle" font-family="Fraunces, serif" font-size="20" fill="#F5F5F3">01</text>
+          <text x="70" y="86" text-anchor="middle" font-family="Inter, sans-serif" font-size="9" fill="#8A8A85" letter-spacing="0.04em">RESPONDE</text>
+        </g>
+
+        <g>
+          <circle cx="330" cy="70" r="42" fill="#121212" stroke="#2E5942" stroke-width="1.5"/>
+          <text x="330" y="63" text-anchor="middle" font-family="Fraunces, serif" font-size="20" fill="#F5F5F3">02</text>
+          <text x="330" y="86" text-anchor="middle" font-family="Inter, sans-serif" font-size="9" fill="#8A8A85" letter-spacing="0.04em">FILTRAMOS</text>
+        </g>
+
+        <g>
+          <circle cx="200" cy="272" r="48" fill="#1F3D2E" stroke="#3F9868" stroke-width="2"/>
+          <text x="200" y="264" text-anchor="middle" font-family="Fraunces, serif" font-size="22" fill="#F5F5F3">03</text>
+          <text x="200" y="288" text-anchor="middle" font-family="Inter, sans-serif" font-size="9" fill="#F5F5F3" letter-spacing="0.04em" font-weight="600">CLAREZA</text>
+        </g>
+      </svg>
+    </div>
+    <div class="steps">
+      <div class="step">
+        <span class="step-num display">01</span>
+        <div>
+          <div class="step-title">Você responde o roteiro</div>
+          <p class="step-text">Um roteiro direcionado sobre sua oferta, seu público e sua comunicação atual. Direto ao ponto que importa, sem enrolação.</p>
+        </div>
+      </div>
+      <div class="step">
+        <span class="step-num display">02</span>
+        <div>
+          <div class="step-title">Aplicamos o filtro</div>
+          <p class="step-text">Os mesmos filtros que separam comunicação que vende de comunicação que só descreve. Sua resposta passa por eles.</p>
+        </div>
+      </div>
+      <div class="step">
+        <span class="step-num display">03</span>
+        <div>
+          <div class="step-title">Você recebe o apontamento</div>
+          <p class="step-text">Sai com o problema nomeado e o próximo passo claro. Pronto pra corrigir, sem testar mais um mês no escuro.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="eyebrow">Para quem é</div>
+    <h2 class="section-title display">Serve pra você, se</h2>
+    <div class="who-grid">
+      <div class="who-item"><span class="who-mark display">＋</span><span>Você tem produto, serviço ou conhecimento validado, mas a comunicação não traduz o valor real do que entrega.</span></div>
+      <div class="who-item"><span class="who-mark display">＋</span><span>Você é profissional liberal e quer virar referência na própria área.</span></div>
+      <div class="who-item"><span class="who-mark display">＋</span><span>Você tem curso ou mentoria com página recebendo tráfego que não converte.</span></div>
+      <div class="who-item"><span class="who-mark display">＋</span><span>Você vive de indicação e trava na hora de se apresentar por escrito.</span></div>
+      <div class="who-item"><span class="who-mark display">＋</span><span>Você tem audiência engajada que não vira cliente.</span></div>
+      <div class="who-item no"><span class="who-mark display">－</span><span>Você ainda não tem nenhuma oferta estruturada. Primeiro é preciso ter o que vender.</span></div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="eyebrow">O que você recebe</div>
+    <h2 class="section-title display">Entregáveis</h2>
+    <div class="deliv-list">
+      <div class="deliv-item">
+        <span class="deliv-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 12l2 2 4-4M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg></span>
+        <span class="deliv-text">Roteiro de diagnóstico completo, em PDF, pra responder no seu ritmo.</span>
+      </div>
+      <div class="deliv-item">
+        <span class="deliv-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 12l2 2 4-4M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg></span>
+        <span class="deliv-text">Devolutiva apontando o ponto exato onde sua comunicação perde a pessoa.</span>
+      </div>
+      <div class="deliv-item">
+        <span class="deliv-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 12l2 2 4-4M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg></span>
+        <span class="deliv-text">Lista curta com o próximo passo prático pra corrigir, sem depender de mais ninguém pra começar.</span>
+      </div>
+    </div>
+    <span class="bonus-tag">Bônus incluso</span>
+    <p class="body-text" style="margin-top:14px">Checklist de 12 perguntas pra revisar qualquer copy nova antes de publicar, pra não cair no mesmo ponto cego de novo.</p>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="eyebrow">Investimento</div>
+    <h2 class="section-title display">O que isso vale</h2>
+    <p class="body-text">Uma sessão avulsa de consultoria de comunicação no mercado custa a partir de R$ 500. Aqui você tem o mesmo tipo de apontamento direcionado, em formato guiado, por uma fração disso.</p>
+    <div class="value-card">
+      <div class="value-row"><span>Roteiro de diagnóstico direcionado</span><span class="strike">R$ 297</span></div>
+      <div class="value-row"><span>Devolutiva com ponto exato do erro</span><span class="strike">R$ 397</span></div>
+      <div class="value-row"><span>Checklist de revisão (bônus)</span><span class="strike">R$ 97</span></div>
+      <div class="value-final">
+        <span style="color:rgba(245,245,243,0.7); font-size:14px">De R$ 791 por</span>
+        <span class="price display">R$ 67<span> à vista</span></span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="eyebrow">Depoimentos</div>
+    <div style="display:flex; flex-direction:column; gap:16px; margin-top:8px">
+      <div class="proof-block">
+        <p>"Fiz o diagnóstico numa sexta à tarde. Na segunda já sabia exatamente o que reescrever."</p>
+        <span class="proof-tag">Substituir por depoimento real</span>
+      </div>
+      <div class="proof-block">
+        <p>"Trabalho com isso há anos e ainda assim não via o próprio erro. De fora fica óbvio."</p>
+        <span class="proof-tag">Substituir por depoimento real</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="eyebrow">Garantia</div>
+    <div class="guarantee-box">
+      <svg class="guarantee-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 2l8 4v6c0 5-3.5 8.5-8 10-4.5-1.5-8-5-8-10V6l8-4z"/><path d="M9 12l2 2 4-4"/></svg>
+      <p class="body-text" style="margin:0">Se você responder o roteiro completo e sentir que a devolutiva não trouxe clareza nenhuma, devolvemos o valor pago. Sem letra miúda.</p>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="eyebrow">Por que existe</div>
+    <h2 class="section-title display">A Primia</h2>
+    <p class="body-text">Este diagnóstico nasceu de um padrão que se repete: gente competente, com produto validado, perdendo venda por um detalhe de comunicação que ela mesma não conseguia enxergar. Eu sou Paulo Fasanella, trabalho com comunicação persuasiva e construí esse método depois de ver o mesmo erro se repetir em nicho após nicho. A Primia existe pra resolver exatamente essa lacuna, com método, não com achismo.</p>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="eyebrow">Perguntas frequentes</div>
+    <h2 class="section-title display">FAQ</h2>
+    <div>
+      <details class="faq-item">
+        <summary>Já tentei revisar minha copy sozinho, por que seria diferente agora?<span class="faq-plus"></span></summary>
+        <p class="faq-answer">Porque quem escreveu o texto não consegue ler com os olhos de quem nunca viu a oferta antes. O diagnóstico aplica um filtro externo, treinado pra achar exatamente esse tipo de ponto cego.</p>
+      </details>
+      <details class="faq-item">
+        <summary>15 minutos é pouco pra resolver algo tão importante?<span class="faq-plus"></span></summary>
+        <p class="faq-answer">O tempo de 15 minutos é pra identificar o problema, não pra reescrever tudo. Depois de saber onde está o furo, a correção fica muito mais rápida do que continuar tentando adivinhar.</p>
+      </details>
+      <details class="faq-item">
+        <summary>Meu mercado já está cheio de gente vendendo comunicação, isso é diferente?<span class="faq-plus"></span></summary>
+        <p class="faq-answer">A diferença não está na promessa, está na especificidade do apontamento. Aqui você recebe o ponto exato da sua comunicação, não uma aula genérica de copywriting.</p>
+      </details>
+      <details class="faq-item">
+        <summary>E se eu preferir esperar um pouco antes de investir nisso?<span class="faq-plus"></span></summary>
+        <p class="faq-answer">Cada mês com esse ponto cego ativo é comunicação perdendo venda que não volta. O diagnóstico custa menos que um dia de tráfego pago mal direcionado.</p>
+      </details>
+    </div>
+  </div>
+</section>
+
+<section id="oferta" class="final-offer" style="border-bottom:none">
+  <div class="wrap">
+    <h2 class="section-title display">Continue adivinhando, ou descubra em 15 minutos</h2>
+    <p class="body-text">Você pode continuar testando anúncio, trocando frase, baixando preço, e esperando que algo mude sozinho. Ou pode gastar 15 minutos descobrindo o que está travando de verdade, e corrigir isso de uma vez.</p>
+    <a href="#" class="cta-btn">
+      Sim, quero descobrir por que minha comunicação não vende
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+    </a>
+    <span class="cta-note">Acesso imediato após a confirmação</span>
+  </div>
+</section>
+
+<footer>
+  <span class="brandname">Diagnóstico ECP</span>
+</footer>
+
+</body>
+</html>
